@@ -1,0 +1,15 @@
+http://www.mossle.com/docs/auth/html/ch301-acl.html
+
+
+处于继承树顶端的AbstractSecurityInterceptor有三个实现类： 
+
+FilterSecurityInterceptor，负责处理FilterInvocation，实现对URL资源的拦截。 
+MethodSecurityInterceptor，负责处理MethodInvocation，实现对方法调用的拦截。 
+AspectJSecurityInterceptor，负责处理JoinPoint，主要也是用于对方法调用的拦截。 
+
+
+http://www.mossle.com/docs/auth/html/ch207-resc.html
+
+http://www.mossle.com/docs/auth/html/index.html
+
+http://docs.spring.io/spring-security/site/docs/4.0.4.RELEASE/reference/htmlsingle/#appendix-schema

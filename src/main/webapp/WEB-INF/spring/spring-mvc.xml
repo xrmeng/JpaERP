@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+    xmlns:cache="http://www.springframework.org/schema/cache"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/data/jpa
+		http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+		http://www.springframework.org/schema/cache 
+		http://www.springframework.org/schema/cache/spring-cache.xsd
+		http://www.springframework.org/schema/mvc
+		http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/security
+		http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <mvc:resources mapping="/css/**" location="/css/" /> 
+    <mvc:resources mapping="/js/**" location="/js/" />
+    <mvc:resources mapping="/images/**" location="/images/" />
+
+	<!-- Freemarker 视图解析器 -->
+	<bean id="freemarkerConfig"
+		class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+		<property name="templateLoaderPath" value="/WEB-INF/views/" />
+		<property name="defaultEncoding" value="utf-8" />
+		<property name="freemarkerSettings">
+			<props>
+				<prop key="template_update_delay">0</prop> <!--刷新模板的周期，单位为秒--> 
+				<prop key="classic_compatible">true</prop> <!-- 此属性可以防止模板解析空值时的错误  -->
+				<prop key="locale">zh_CN</prop>
+				<prop key="datetime_format">yyyy-MM-dd</prop>
+				<prop key="date_format">yyyy-MM-dd</prop>
+				<prop key="number_format">#.##</prop>
+				<prop key="auto_import">localization/spring.ftl as spring</prop>
+			</props>
+		</property>
+        <property name="freemarkerVariables"><!--设置一些常用的全局变量-->
+			<map>
+				<entry key="home" value="/"></entry>
+				<entry key="js" value="/js"></entry>
+				<entry key="css" value="/css"></entry>
+				<entry key="images" value="/images"></entry>
+			</map>
+        </property>
+	</bean>
+	
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.freemarker.FreeMarkerView"></property>
+		<property name="suffix" value=".htm" />
+		<property name="contentType" value="text/html;charset=utf-8" />
+		<property name="exposeRequestAttributes" value="true" />
+		<property name="exposeSessionAttributes" value="true" />
+		<property name="exposeSpringMacroHelpers" value="true" />
+		<property name="order" value="0" />
+	</bean>
+
+</beans>

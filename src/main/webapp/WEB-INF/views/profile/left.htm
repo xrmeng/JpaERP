@@ -1,0 +1,14 @@
+
+<div id="left">
+  <p>&lt;- <a href="/erp">返回上级 </a></p>
+  <p>&nbsp;</p>
+  <p>-> <a href="/erp/profile/changePassword">修改密码</a> </p>
+  <p>-> <a href="/erp/profile/completeInfo">完善个人资料</a> </p>
+  <#if company?exists>
+  	<#assign aname="编辑公司信息">
+  <#else>
+  	<#assign aname="公司申请入驻">
+  </#if>
+  <p>-> <a href="/erp/profile/registerCompany">${(aname)!}</a> </p>
+  <p>&nbsp;</p>
+</div>

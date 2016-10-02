@@ -1,0 +1,199 @@
+<!-- Modal -->
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <!--
+      <a id="modal-433160" href="#modal-container-433160" role="button" class="btn" data-toggle="modal">Launch demo modal</a>
+      -->
+      <div class="modal fade" id="modal-container-433160" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> × </button>
+              <h4 class="modal-title" id="myModalLabel"> 修改部门资料 <span id="form-output"></span></h4>
+            </div>
+            <div class="modal-body"> 
+      <form class="form-horizontal" role="form" id="form_stuff_edit" action="/erp/api/staff" method="post">
+        <div class="form-group">
+          <label for="inputEmail3" class="col-sm-2 control-label"> 部分id： </label>
+          <input type="hidden" name="id" id="id" />
+          <div class="col-sm-10">
+            <p style="line-height:;" id="id-container"></p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="inputEmail3" class="col-sm-2 control-label"> 部门名称： </label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" name="name" id="name" />
+          </div>
+        </div>
+        <div class="form-group">
+            <label for="reg_password" class="col-sm-2 control-label">
+                Leader：
+            </label>
+            <div class="col-sm-10">
+                <select class="form-control" name="leader" id="leader">
+                    <#if (staffs)?exists>
+                        <#list staffs as s>
+                            <#if !(s.amoeba)?exists>
+                            <option value="${(s.id)!}">
+                                ${(s.id)!} : ${(s.realname)!"姓名未填写"} (${(s.account.username)!})
+                            </option>
+                            </#if>
+                        </#list>
+                    </#if>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="staffs" class="col-sm-2 control-label">
+                成员选择：
+            </label>
+            <div class="col-sm-10">
+                <select multiple class="form-control" style="height:160px;" name="staffs" id="staffs">
+                    <#if (staffs)?exists>
+                        <#list staffs as s>
+                            <#if !s.amoeba?exists>
+                                <option value="${(s.id)!}">
+                                    ${(s.id)!} : ${(s.realname)!"姓名未填写"} (${(s.account.username)!})
+                                </option>
+                            </#if>
+                        </#list>
+                    </#if>
+                </select>
+            </div>
+        </div>
+        <hr/>
+        <div class="form-group" style="padding-top:10px;">
+		  <label for="inputPassword3" class="col-sm-2 control-label"> 选择角色： </label>
+          <div class="col-sm-10" style="padding-top:5px; padding-bottom:15px;">
+          	 <label>
+                 <input type="checkbox" name="role[]" value="ROLE_用户" class="rolechecker" id="ROLE_用户" checked="checked" disabled="disabled">
+                 <span class="label label-success">用户</span>
+             </label>
+			 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          	 <label>
+             	<input type="checkbox" name="roles" value="ROLE_职员" class="rolechecker" id="ROLE_职员" disabled="disabled">
+                <span class="label label-success">职员</span>
+             </label>
+			 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          	 <label>
+             	<input type="checkbox" name="roles" value="ROLE_客服" class="rolechecker" id="ROLE_客服">
+                <span class="label label-default">客服</span>
+             </label>
+			 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          	 <label>
+             	<input type="checkbox" name="roles" value="ROLE_买手" class="rolechecker" id="ROLE_买手">
+                <span class="label label-default">买手</span>
+             </label>
+			 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          	 <label>
+             	<input type="checkbox" name="roles" value="ROLE_仓库管理员" class="rolechecker" id="ROLE_仓库管理员">
+                <span class="label label-default">库管</span>
+             </label>
+			 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          	 <label>
+             	<input type="checkbox" name="roles" value="ROLE_现金会计" class="rolechecker" id="ROLE_现金会计">
+                <span class="label label-default">会计</span>
+             </label>
+			 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<script type="text/javascript">
+$(document).ready(function(){
+	$(".rolechecker").click(function(e){
+		if($(this).is(':checked')){
+			$(this).next().addClass("label-success");
+		}else{
+			$(this).next().removeClass("label-success");
+		}
+	})
+});
+</script>
+          </div>
+        </div>
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+      </form>
+
+            </div>
+            <div class="modal-footer" style="padding-right:50px; padding-bottom:25px;">
+              <button type="button" class="btn btn-default" data-dismiss="modal" id="dismiss_button"> &nbsp;取消&nbsp; </button>
+              <button type="button" class="btn btn-primary" id="submit_button"> &nbsp;保存更改&nbsp; </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $("#submit_button").click(function(e){
+		$("#form_stuff_edit").submit();
+	})
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+    var options = {
+        target:        '#form-output',   // target element(s) to be updated with server response
+        beforeSubmit:  showRequest,  // pre-submit callback
+        success:	   showResponse,  // post-submit callback
+        // other available options:
+        //url:       url         // override for form's 'action' attribute
+        //type:      type        // 'get' or 'post', override for form's 'method' attribute
+        //dataType:  json        // 'xml', 'script', or 'json' (expected server response type)
+        //clearForm: true        // clear all form fields after successful submit
+        //resetForm: true        // reset the form after successful submit
+        // $.ajax options can be used here too, for example:
+        //timeout:   3000
+    };
+
+    // bind form using 'ajaxForm'
+    $('#form_stuff_edit').ajaxForm(options);
+});
+
+// pre-submit callback
+function showRequest(formData, jqForm, options) {
+    // formData is an array; here we use $.param to convert it to a string to display it
+    // but the form plugin does this for you automatically when it submits the data
+    var queryString = $.param(formData);
+
+    // jqForm is a jQuery object encapsulating the form element.  To access the
+    // DOM element for the form do this:
+    // var formElement = jqForm[0];
+
+    //alert('About to submit: \n\n' + queryString);
+
+    // here we could return false to prevent the form from being submitted;
+    // returning anything other than false will allow the form submit to continue
+    return true;
+}
+
+// post-submit callback
+function showResponse(responseText, statusText, xhr, $form)  {
+    // for normal html responses, the first argument to the success callback
+    // is the XMLHttpRequest object's responseText property
+
+    // if the ajaxForm method was passed an Options Object with the dataType
+    // property set to 'xml' then the first argument to the success callback
+    // is the XMLHttpRequest object's responseXML property
+
+    // if the ajaxForm method was passed an Options Object with the dataType
+    // property set to 'json' then the first argument to the success callback
+    // is the json data object returned by the server
+
+	var response = responseText;
+	if(!responseText.success){
+		$("#form-output").html(response.message);
+		alert(response.message);
+	}else{
+		$("#form-output").html(response.message);
+		alert(response.message);
+		$("#dismiss_button").click();
+	}
+}
+</script>

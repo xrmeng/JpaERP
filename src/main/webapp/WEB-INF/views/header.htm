@@ -1,0 +1,35 @@
+<div class="row" style="margin:0px; background-color:#999;">
+    <div class="col-sm-1 col-md-1 col-lg-1"></div>
+    <div class="col-sm-10 col-md-10 col-lg-10">
+    	<div class="row" style="margin:0px;">
+       		<div class="col-sm-12 col-md-12 col-lg-12" style="padding:0px 0px 0px 0px;">
+				<div class="row" style="margin:0px;">
+                	<div class="col-sm-12 col-md-12 col-lg-12" style="height:40px; line-height:32px; font-size:13px; color:#DDD;">
+                    	乐健商贸有限公司：xrmeng（系统管理员，用户，仓库管理员，客服）： 
+<#if (Session["SPRING_SECURITY_CONTEXT"].authentication.principal.username)?exists>
+    <a href="javascript:;" csrf_key="${_csrf.parameterName}" csrf_val="${_csrf.token}" id="logout">退出系统</a>
+    <form action="/logout" method="post" id="logout-form">
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+    </form>
+    <script type="text/javascript">
+        $("#logout").click(function(){
+            $("#logout-form").submit();
+        });
+    </script>
+<#else>
+	<a href="/erp/login" target="_self">login</a>
+</#if>
+                    </div>
+                	<div class="col-sm-12 col-md-12 col-lg-12" style="height:52px;">
+                    	<#include "/header_navigation.htm">
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+        </div>
+    
+
+    </div>
+    <div class="col-sm-1 col-md-1 col-lg-1"></div>
+    <div class="clearfix visible-xs-block"></div>
+</div>

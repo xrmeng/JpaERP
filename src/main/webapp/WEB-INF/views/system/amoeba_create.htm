@@ -1,0 +1,192 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>首页 - ORDER_ERP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="/css/bootswatch/assets/css/custom.min.css" />
+    <script src="/js/jquery-1.11.3.min.js"></script>
+    <script src="/css/bootswatch/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/css/bootswatch/assets/js/custom.js"></script>
+	<script src="/js/jquery.form.js"></script>
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="/css/bower_components/html5shiv/dist/html5shiv.js"></script>
+      <script src="/css/bower_components/respond/dest/respond.min.js"></script>
+    <![endif]-->
+    
+
+</head>
+
+<body style="padding-top:0px;">
+<#include "../header.htm">
+    
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-1">
+		</div>
+		<div class="col-md-10">
+			<div class="row">
+				<div class="col-md-2">
+                	<#include "left.htm">
+				</div>
+				<div class="col-md-10">
+                
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<h4 class="text-left">
+				创建新部门
+			</h4>
+        </div>
+    </div>
+	<div class="row" style="padding-top:25px;">
+		<div class="col-md-10">
+        	<div>
+            	<h5 id="output">&nbsp;${(error)!}</h5>
+            </div>
+            <form name="form" id="form" class="form-horizontal" role="form" method="post" action="/erp/api/amoeba">
+                <div class="form-group">
+                	<!--
+                    <label for="inputId" class="col-sm-2 control-label">
+                        部门id：  
+                    </label>
+                    -->
+                    <div class="col-sm-10">
+                        <input type="hidden" id="id" name="id" value="${(data.id)!}" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="name" class="col-sm-2 control-label">
+                        部门名称：
+                    </label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="name" name="name" value="${(data.name)!}" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="reg_password" class="col-sm-2 control-label">
+                        Leader：
+                    </label>
+                    <div class="col-sm-10">
+                        <select class="form-control" name="leader" id="leader">
+                        	<#if (staffs)?exists>
+                                <#list staffs as s>
+                                	<#if !(s.amoeba)?exists>
+                                    <option value="${(s.id)!}">
+                                    	${(s.id)!} : ${(s.realname)!"姓名未填写"} (${(s.account.username)!})
+                                    </option>
+                                    </#if>
+                                </#list>
+                            </#if>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="staffs" class="col-sm-2 control-label">
+                        成员选择：
+                    </label>
+                    <div class="col-sm-10">
+                        <select multiple class="form-control" style="height:160px;" name="staffs" id="staffs">
+                        	<#if (staffs)?exists>
+                                <#list staffs as s>
+                                	<#if !s.amoeba?exists>
+                                        <option value="${(s.id)!}">
+                                            ${(s.id)!} : ${(s.realname)!"姓名未填写"} (${(s.account.username)!})
+                                        </option>
+                                    </#if>
+                                </#list>
+                            </#if>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group" style="padding-top:15px;">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                        <button type="submit" class="btn btn-default">
+                            提交信息
+                        </button>
+                    </div>
+                </div>
+            </form>
+<script type="text/javascript">
+$(document).ready(function() {
+    var options = {
+        target:        '#output',   // target element(s) to be updated with server response
+        beforeSubmit:  showRequest,  // pre-submit callback
+        success:       showResponse,  // post-submit callback
+        // other available options:
+        //url:       url         // override for form's 'action' attribute
+        //type:      type        // 'get' or 'post', override for form's 'method' attribute
+        //dataType:  json        // 'xml', 'script', or 'json' (expected server response type)
+        //clearForm: true        // clear all form fields after successful submit
+        //resetForm: true        // reset the form after successful submit
+        // $.ajax options can be used here too, for example:
+        //timeout:   3000
+    };
+
+    // bind form using 'ajaxForm'
+    $('#form').ajaxForm(options);
+});
+
+// pre-submit callback
+function showRequest(formData, jqForm, options) {
+    // formData is an array; here we use $.param to convert it to a string to display it
+    // but the form plugin does this for you automatically when it submits the data
+    var queryString = $.param(formData);
+
+    // jqForm is a jQuery object encapsulating the form element.  To access the
+    // DOM element for the form do this:
+    // var formElement = jqForm[0];
+
+    //alert('About to submit: \n\n' + queryString);
+
+    // here we could return false to prevent the form from being submitted;
+    // returning anything other than false will allow the form submit to continue
+    return true;
+}
+
+// post-submit callback
+function showResponse(responseText, statusText, xhr, $form)  {
+    // for normal html responses, the first argument to the success callback
+    // is the XMLHttpRequest object's responseText property
+
+    // if the ajaxForm method was passed an Options Object with the dataType
+    // property set to 'xml' then the first argument to the success callback
+    // is the XMLHttpRequest object's responseXML property
+
+    // if the ajaxForm method was passed an Options Object with the dataType
+    // property set to 'json' then the first argument to the success callback
+    // is the json data object returned by the server
+	var response = responseText;
+	if(!responseText.success){
+		$("#output").html(response.message);
+		alert(response.message);
+	}else{
+		$("#output").html(response.message);
+		alert(response.message);
+		window.location.href=response.foward;
+	}
+}
+</script>
+
+		</div>
+		<div class="col-md-2">
+		</div>
+	</div>
+</div>
+                
+                
+				</div>
+			</div>
+		</div>
+		<div class="col-md-1">
+		</div>
+	</div>
+</div>
+    
+<#include "../footer.htm">
+</body>
+</html>

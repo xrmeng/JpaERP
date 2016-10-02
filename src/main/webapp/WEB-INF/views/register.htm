@@ -1,0 +1,162 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>用户注册-OrderERP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.css" media="screen" />
+    <script type="text/javascript" src="/js/jquery-1.12.3.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.form.js"></script>
+    <script type="text/javascript" src="/js/bootstrap.min.js"></script>
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="/css/bower_components/html5shiv/dist/html5shiv.js"></script>
+      <script src="/css/bower_components/respond/dest/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body style="padding-top:0px;">
+
+<div class="container-fluid">
+    <div class="row" style="background-color:#ECECEC;">
+        <div class="col-sm-1 col-md-1 col-lg-1"></div>
+        <div class="col-sm-10 col-md-10 col-lg-10">
+            <div style="padding:22px 0px 22px 0px;">
+                <h1 style="font-size:18px;">OrderERP</h1>
+            </div>
+        </div>
+        <div class="col-sm-1 col-md-1 col-lg-1"></div>
+        <div class="clearfix visible-xs-block"></div>
+    </div>
+    
+	<div class="row">
+		<div class="col-md-3">
+		</div>
+		<div class="col-md-6">
+            <div class="row">
+                <div class="col-md-10">
+                    <div>
+                        <div class="page-header" style="height:45px;">
+                            <h1 style="font-size:24px; font-family:微软雅黑;">
+                                <span id="register-output">注册新用户</span>
+                                <small style="float:right; font-weight:normal;">有帐号了？ <a href="/login">现在登录</a></small>
+                            </h1>
+                        </div>
+<form name="register_form" id="register_form" class="form-horizontal" role="form" method="post" action="/register">
+    <div class="form-group">
+        <label for="regAccount" class="col-sm-2 control-label">
+            帐号：
+        </label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="regAccount" name="regAccount" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="regPassword" class="col-sm-2 control-label">
+            密码：
+        </label>
+        <div class="col-sm-10">
+            <input type="password" class="form-control" id="regPassword" name="regPassword" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="repeatPassword" class="col-sm-2 control-label">
+            重复密码：
+        </label>
+        <div class="col-sm-10">
+            <input type="password" class="form-control" id="repeatPassword" name="repeatPassword" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="regCaptcha" class="col-sm-2 control-label">
+            验证码：
+        </label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="regCaptcha" name="regCaptcha" />
+            <img src="/captcha.jpg" onclick="this.src='/captcha.jpg'" style="margin-top:5px;"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            <button type="submit" class="btn btn-default">
+                提交注册信息
+            </button>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+$(document).ready(function() {
+    var options = {
+        //target:        '#register-output',   // target element(s) to be updated with server response
+        beforeSubmit:  showRequest,  // pre-submit callback
+        success:       showResponse,  // post-submit callback
+        // other available options:
+        //url:       url         // override for form's 'action' attribute
+        //type:      type        // 'get' or 'post', override for form's 'method' attribute
+        //dataType:  json        // 'xml', 'script', or 'json' (expected server response type)
+        //clearForm: true        // clear all form fields after successful submit
+        //resetForm: true        // reset the form after successful submit
+        // $.ajax options can be used here too, for example:
+        //timeout:   3000
+    };
+
+    // bind form using 'ajaxForm'
+    $('#register_form').ajaxForm(options);
+});
+
+// pre-submit callback
+function showRequest(formData, jqForm, options) {
+    // formData is an array; here we use $.param to convert it to a string to display it
+    // but the form plugin does this for you automatically when it submits the data
+    var queryString = $.param(formData);
+
+    // jqForm is a jQuery object encapsulating the form element.  To access the
+    // DOM element for the form do this:
+    // var formElement = jqForm[0];
+
+    //alert('About to submit: \n\n' + queryString);
+
+    // here we could return false to prevent the form from being submitted;
+    // returning anything other than false will allow the form submit to continue
+    return true;
+}
+
+// post-submit callback
+function showResponse(responseText, statusText, xhr, $form)  {
+    // for normal html responses, the first argument to the success callback
+    // is the XMLHttpRequest object's responseText property
+
+    // if the ajaxForm method was passed an Options Object with the dataType
+    // property set to 'xml' then the first argument to the success callback
+    // is the XMLHttpRequest object's responseXML property
+
+    // if the ajaxForm method was passed an Options Object with the dataType
+    // property set to 'json' then the first argument to the success callback
+    // is the json data object returned by the server
+	var response = responseText;
+	if(!responseText.success){
+		response.message = "<span style='color:#F00;'>" + response.message + "</span>"
+		$("#register-output").html(response.message);
+	}else{
+		response.message = "<span style='color:#F00;'>" + response.message + "</span>"
+		alert(response.message);
+		window.location.href=response.foward;
+	}
+}
+</script>
+                    </div>
+                </div>
+                <div class="col-md-2"></div>
+            </div>
+		</div>
+		<div class="col-md-3">
+		</div>
+	</div>
+    
+</div>
+    
+<#include "/footer.htm">
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>首页 - ORDER_ERP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="/css/bootswatch/assets/css/custom.min.css" />
+    <script src="/js/jquery-1.11.3.min.js"></script>
+    <script src="/css/bootswatch/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/css/bootswatch/assets/js/custom.js"></script>
+    <script src="/js/jquery.form.js"></script>
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="/css/bower_components/html5shiv/dist/html5shiv.js"></script>
+      <script src="/css/bower_components/respond/dest/respond.min.js"></script>
+    <![endif]-->
+    
+
+</head>
+
+<body style="padding-top:0px;">
+<#include "../header.htm" />
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-1">
+		</div>
+		<div class="col-md-10">
+			<div class="row">
+				<div class="col-md-2">
+                	<#include "left.htm">
+				</div>
+				<div class="col-md-10">
+                
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<h4 class="text-left">
+				${(company.name)!} 帐号管理
+			</h4>
+			<div class="row" style="padding-top:30px; padding-bottom:25px;">
+				<div class="col-md-10">
+					<form class="form-inline" role="form">
+                        <div class="form-group">
+                            <label class="sr-only" for="exampleInputAmount">Amount (in dollars)</label>
+                            <div class="input-group">
+                                <div class="input-group-addon">&nbsp;</div>
+                                	<input type="text" class="form-control" id="keyword" name="keyword" placeholder="关键字" value="${(RequestParameters.keyword)!}">
+                                    
+                                <div class="input-group-addon"></div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">快速查找</button>
+					</form>
+				</div>
+				<div class="col-md-2">
+                	<a href="/erp/system/staff/create">
+						<button type="button" class="btn btn-success">创建新帐号</button>
+                    </a>
+				</div>
+			</div>
+			<table class="table table-hover table-striped">
+				<thead>
+					<tr>
+						<th>
+							id
+						</th>
+						<th>
+							帐号
+						</th>
+						<th>
+							姓名
+						</th>
+						<th style="width:160px;">
+							状态
+						</th>
+						<th style="width:240px;">
+							操作
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+<#list page.content as u>
+	<tr>
+    	<td>${(u.id)!}</td>
+		<td>${(u.account.username)!}</td>
+		<td>${(u.realname)!}</td>
+		<td>~</td>
+        <td>
+			<div class="btn-group">
+				<button class="btn btn-default">
+					&nbsp;
+				</button> 
+				<button data-toggle="dropdown" class="btn btn-default dropdown-toggle">
+					<span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu">
+                	<!--
+					<li>
+                    	<a href="" data-toggle="modal" data-target="#myModal">查看信息</a>
+						<a href="/erp/system/stuff/view/${(u.id)!}">查看信息</a>
+					</li>
+                    -->
+					<li>
+						<a href="#modal-container-433160" data-toggle="modal" class="btn_edit" value="${(u.id)!}">编辑资料</a>
+					</li>
+					<li>
+						<a href="#">禁止登录</a>
+					</li>
+					<li class="divider"></li>
+					<li class="disabled">
+						<a href="#">删除</a>
+					</li>
+				</ul>
+			</div>
+        </td>
+    </tr>
+</#list>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $(".btn_edit").click(function(e){
+		$.ajax({
+			type: "GET",
+			url: "/erp/api/staff/" + $(this).attr("value"),
+			dataType: "json",
+			success: function(data){
+				$("#id").val(data.id);
+				$("#account").html(data.account.username);
+				$("#password").val("");
+				$("#password").attr("disabled", "disabled");
+				$("#repassword").val("");
+				$("#repassword").attr("disabled", "disabled");
+				$("#change_password").removeAttr("checked");
+				$.each(data.roles,function(n,value) {
+					$("#"+value.rolename).val(value.rolename);
+					$("#"+value.rolename).attr("checked","checked");
+					if($("#"+value.rolename).is(':checked')){
+						$("#"+value.rolename).next().addClass("label-success");
+					}else{
+						$("#"+value.rolename).next().removeClass("label-success");
+					}
+				});  
+			}
+		});
+	})
+});
+</script>
+
+				</tbody>
+			</table>
+
+            <#include "../pagination.html" />
+            <@pagination page=page params=RequestParameters />
+            
+		</div>
+	</div>
+</div>
+                
+                
+				</div>
+			</div>
+		</div>
+		<div class="col-md-1">
+		</div>
+	</div>
+</div>
+
+<#include "staff_list_modal_staff_edit.htm" />
+
+    
+<#include "../footer.htm" />
+</body>
+</html>
